@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "start": "gulp",
+    "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,11 +20,14 @@
   "devDependencies": {
     "@babel/preset-env": "^7.14.2",
     "autoprefixer": "^10.2.6",
+    "babel-preset-duy": "^1.0.5",
     "bower": "^1.8.12",
     "browser-sync": "^2.26.14",
     "cssnano": "^5.0.4",
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
+    "eslint": "^7.27.0",
+    "eslint-config-duy": "^1.0.9",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-cached": "^1.1.1",
@@ -36,7 +41,8 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-terser": "^2.0.1",
     "merge-stream": "^2.0.0",
-    "postcss": "^8.3.0"
+    "postcss": "^8.3.0",
+    "prettier": "^2.3.0"
   },
   "dependencies": {
     "jquery": "^1.12.4"
