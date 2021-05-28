@@ -28,8 +28,10 @@ const styleFolder = 'css'
 const scriptFolder = 'js'
 const assetsFolder = 'assets'
 const libFolder = 'lib'
+const publicFolder = 'public'
 
 const assetsRegex = ['assets/**/*']
+const publicRegex = ['public/**/*']
 const handlebarsRegex = ['app/**/*.handlebars', '!app/partials/*.handlebars']
 const handlebarsPartials = ['./partials']
 const styleRegex = 'scss/**/*.scss'
@@ -41,6 +43,7 @@ const styleDest = buildDest + '/' + styleFolder
 const scriptDest = buildDest + '/' + scriptFolder
 const assetsDest = buildDest + '/' + assetsFolder
 const libDest = buildDest + '/' + libFolder
+const publicDest = buildDest + '/' + publicFolder
 
 const handlebarsHelpers = {
   uppercase: function (str) {
@@ -59,7 +62,7 @@ const handlebarsData = {
   scriptFolder,
   assetsFolder,
   libFolder,
-  siteName: 'Site name',
+  publicFolder,
   ...appEnv,
 }
 
@@ -143,6 +146,10 @@ gulp.task('assets', function () {
   return gulp.src(assetsRegex).pipe(plumber()).pipe(gulp.dest(assetsDest))
 })
 
+gulp.task('public', function () {
+  return gulp.src(publicRegex).pipe(plumber().pipe(gulp.dest(publicDest)))
+})
+
 gulp.task('serve', function () {
   browserSync.init({
     server: {
@@ -156,5 +163,5 @@ gulp.task('serve', function () {
   gulp.watch(handlebarsRegex).on('all', gulp.series('handlebars', browserSync.reload))
 })
 
-gulp.task('build', gulp.series('clean', gulp.parallel('handlebars', 'script', 'style', 'assets', 'lib')))
+gulp.task('build', gulp.series('clean', gulp.parallel('handlebars', 'script', 'style', 'assets', 'lib', 'public')))
 gulp.task('default', gulp.series('build', 'serve'))
