@@ -13,7 +13,11 @@ const del = require("del");
 const cached = require('gulp-cached');
 const plumber = require('gulp-plumber');
 const babel = require('gulp-babel');
+const merge = require('merge-stream');
 const handlebars = require('gulp-compile-handlebars'); // or just gulp-include
+// gulp-rev
+
+const lib = require('./lib.json');
 
 // Linter: gulp-eslint, gulp-stylelint
 
@@ -23,17 +27,20 @@ const buildDest = "dist";
 const styleFolder = "css";
 const scriptFolder = "js";
 const imageFolder = "assets/img"
+const libFolder = "lib"
 
 const imageRegex = ['assets/img/*'];
 const handlebarsRegex = ['app/**/*.handlebars', '!app/partials/*.handlebars'];
 const handlebarsPartials = ['./partials'];
 const styleRegex = "scss/**/*.scss";
 const scriptRegex = 'js/**/*.js';
+const libRegex = "lib/**/*";
 
 const handlebarsDest = buildDest;
 const styleDest = buildDest + "/" + styleFolder;
 const scriptDest = buildDest + "/" + scriptFolder;
 const imageDest = buildDest + "/" + imageFolder;
+const libDest = buildDest + "/" + libFolder;
 
 const handlebarsHelpers = {
     uppercase : function(str){
@@ -94,6 +101,25 @@ gulp.task('script', function() {
         .pipe(gulp.dest(scriptDest))
 });
 
+gulp.task('vendor', function() {
+    var list = [];
+    for (const key in lib)
+        list.push(
+            gulp.src("node_modules/" + key)
+            .pipe(cached('lib/'+ key))
+            .pipe(plumber())
+            .pipe(gulp.dest('lib/' + lib[key]))
+        )
+    return merge(...list)
+});
+
+gulp.task('lib', gulp.series('vendor', function() {
+    return gulp.src(libRegex)
+        .pipe(cached('lib'))
+        .pipe(plumber())
+        .pipe(gulp.dest(libDest))
+}));
+
 gulp.task('image', function() {
     return gulp.src(imageRegex)
         .pipe(cached('image'))
@@ -114,6 +140,6 @@ gulp.task('serve', function() {
     gulp.watch(handlebarsRegex).on('all', gulp.series('handlebars', browserSync.reload));
 });
 
-gulp.task('build', gulp.series('clean', gulp.parallel('handlebars', 'script', 'style', 'image')));
+gulp.task('build', gulp.series('clean', gulp.parallel('handlebars', 'script', 'style', 'image', 'lib')));
 gulp.task('default', gulp.series('build', 'serve'));
 
