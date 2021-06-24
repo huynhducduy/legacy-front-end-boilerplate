@@ -16,6 +16,7 @@ const babel = require('gulp-babel')
 const merge = require('merge-stream')
 const handlebars = require('gulp-compile-handlebars') // or just gulp-include
 // gulp-rev
+// gulp-inject
 
 const lib = require('./lib.json')
 
